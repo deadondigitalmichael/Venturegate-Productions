@@ -1,219 +1,338 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VentureGate Productions</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>VentureGate Productions — Stream</title>
+<meta name="description" content="VentureGate Productions — Stream short films & series" />
+<link rel="icon" href="logo.png" />
 
-    <style>
-        /* --------------------
-           GLOBAL STYLES
-        -------------------- */
-        body {
-            margin: 0;
-            font-family: "Segoe UI", sans-serif;
-            background: #0d0d0d;
-            color: white;
-            overflow-x: hidden;
-        }
+<style>
+  /* ---------- Reset & vars ---------- */
+  :root{
+    --bg:#071016; --panel:#0c1320; --muted:#98a0ad; --accent:#ffb703; --card:#0b1624;
+    --glass: rgba(255,255,255,0.03);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,Segoe UI,system-ui,-apple-system,Roboto,Arial; background:linear-gradient(180deg,var(--bg),#04101a); color:#f6fbff; -webkit-font-smoothing:antialiased;}
+  a{color:inherit}
+  img.logo{height:52px}
 
-        a { text-decoration: none; color: inherit; }
+  header{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(2,6,23,0.6),transparent);backdrop-filter:blur(6px);display:flex;align-items:center;gap:18px;padding:12px 20px}
+  header .left{display:flex;align-items:center;gap:12px}
+  header h1{margin:0;font-size:1.05rem;letter-spacing:1px}
+  .searchbox{flex:1;max-width:760px}
+  .controls{display:flex;gap:10px;align-items:center}
 
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 20px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
-            z-index: 100;
-        }
+  input[type=search]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);color:var(--muted)}
+  button.btn{background:var(--accent);color:#061018;padding:9px 12px;border-radius:9px;border:0;font-weight:700;cursor:pointer}
 
-        header h1 {
-            margin: 0;
-            font-size: 24px;
-            letter-spacing: 2px;
-        }
+  main.container{max-width:1200px;margin:20px auto;padding:12px}
+  .hero{display:flex;gap:18px;align-items:center;justify-content:space-between;background:var(--glass);padding:18px;border-radius:12px}
+  .hero .left{max-width:70%}
+  .hero h2{margin:0;font-size:1.6rem}
+  .hero p{margin:6px 0;color:var(--muted)}
 
-        nav a {
-            margin-left: 25px;
-            font-size: 16px;
-            opacity: 0.8;
-            transition: 0.3s;
-        }
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .chip{background:#071922;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.02);cursor:pointer}
+  .chip.active{background:var(--accent);color:#061018;font-weight:700}
 
-        nav a:hover { opacity: 1; }
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:18px}
+  .card{background:linear-gradient(180deg,#071422,#071327);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03)}
+  .poster{position:relative;padding-top:56.25%;background:#000}
+  .poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .meta{padding:10px}
+  .meta h3{margin:0 0 6px;font-size:1rem}
+  .meta p{margin:0;color:var(--muted);font-size:0.9rem}
 
-        /* Mobile burger */
-        .burger {
-            display: none;
-            font-size: 30px;
-            cursor: pointer;
-        }
+  .ad{background:linear-gradient(90deg,#061424,#08192a);border:1px dashed rgba(255,255,255,0.04);padding:12px;border-radius:8px;text-align:center;color:var(--muted)}
 
-        /* --------------------
-           HERO SECTION
-        -------------------- */
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-            background: linear-gradient(to bottom, #111, #1a1a1a);
-        }
+  /* Player modal */
+  .player-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,12,0.7);z-index:120}
+  .player-box{width:90%;max-width:1100px;background:#021018;border-radius:12px;overflow:hidden}
+  .player-head{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(0,0,0,0.4)}
+  .player-head h4{margin:0}
+  .player-iframe{width:100%;height:62vh;border:0;background:#000;display:block}
 
-        .hero img {
-            width: 220px;
-            height: auto;
-            margin-bottom: 20px;
-            animation: fadeIn 1.5s ease;
-        }
+  /* Watchlist icon, small */
+  .icon{opacity:0.85}
 
-        .hero h2 {
-            font-size: 40px;
-            margin: 10px 0;
-        }
+  footer{margin:36px 0 60px;text-align:center;color:var(--muted);font-size:0.9rem}
 
-        .hero p {
-            font-size: 18px;
-            max-width: 600px;
-            opacity: 0.85;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --------------------
-           SECTIONS
-        -------------------- */
-        section {
-            padding: 80px 8%;
-        }
-
-        .section-title {
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-
-        .about, .services {
-            display: flex;
-            gap: 40px;
-            flex-wrap: wrap;
-        }
-
-        .service-box {
-            background: #141414;
-            padding: 25px;
-            flex: 1;
-            min-width: 250px;
-            border-radius: 10px;
-            transition: 0.3s;
-        }
-        .service-box:hover {
-            transform: translateY(-5px);
-            background: #1d1d1d;
-        }
-
-        /* --------------------
-           FOOTER
-        -------------------- */
-        footer {
-            background: #000;
-            text-align: center;
-            padding: 30px;
-            margin-top: 40px;
-            font-size: 14px;
-            opacity: 0.7;
-        }
-
-        /* --------------------
-           RESPONSIVE
-        -------------------- */
-        @media(max-width: 800px) {
-            nav { display: none; }
-            .burger { display: block; }
-        }
-    </style>
+  /* Responsive */
+  @media(max-width:720px){
+    .hero{flex-direction:column;align-items:flex-start}
+    header{padding:10px}
+    img.logo{height:44px}
+  }
+</style>
 </head>
 <body>
 
-    <!-- HEADER -->
-    <header>
-        <h1>VENTUREGATE</h1>
-        <span class="burger" onclick="toggleMenu()">☰</span>
-        <nav id="navMenu">
-            <a href="#about">About</a>
-            <a href="#services">Services</a>
-            <a href="#contact">Contact</a>
-        </nav>
-    </header>
+<header>
+  <div class="left">
+    <img class="logo" src="logo.png" alt="VentureGate logo" onerror="this.style.display='none'"/>
+    <h1>VentureGate Productions</h1>
+  </div>
+  <div class="searchbox">
+    <input id="search" type="search" placeholder="Search films, tags, year... (press Enter)" />
+  </div>
+  <div class="controls">
+    <button id="openWatchlist" class="btn">Watchlist</button>
+  </div>
+</header>
 
-    <!-- HERO SECTION -->
-    <div class="hero">
-        <img src="logo.png" alt="VentureGate Productions Logo" />
-        <h2>Cinematic Vision. Professional Execution.</h2>
-        <p>VentureGate Productions brings ambitious stories to life — film, digital media, 
-           branded content, and creative direction with a bold visual edge.</p>
+<main class="container">
+  <section class="hero">
+    <div class="left">
+      <h2>Stream short films & series — Belfast stories, global reach</h2>
+      <p>Browse, search, and stream. Add films below by editing the <code>films</code> list in the code (or films.json).</p>
+
+      <div class="filters" id="tagList"></div>
+    </div>
+    <div style="min-width:240px">
+      <div class="ad" id="topAd">Ad placeholder — place sponsor image or ad script here</div>
+    </div>
+  </section>
+
+  <section style="margin-top:18px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="margin:0">Featured</h3>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select id="sort" style="padding:8px;border-radius:8px;background:#071325;border:1px solid rgba(255,255,255,0.03);color:var(--muted)">
+          <option value="new">Newest</option>
+          <option value="old">Oldest</option>
+          <option value="az">Title A–Z</option>
+        </select>
+      </div>
     </div>
 
-    <!-- ABOUT -->
-    <section id="about">
-        <h2 class="section-title">About Us</h2>
-        <div class="about">
-            <p>
-                At VentureGate Productions, we specialise in storytelling that pushes visual 
-                boundaries and leaves a lasting impact.  
-                <br><br>
-                From short films and documentaries to branded content and creative music visuals,
-                our team delivers cinematic quality with a professional workflow.
-            </p>
-        </div>
-    </section>
+    <div class="grid" id="grid"></div>
+  </section>
 
-    <!-- SERVICES -->
-    <section id="services">
-        <h2 class="section-title">What We Do</h2>
-        <div class="services">
-            <div class="service-box">
-                <h3>🎥 Film Production</h3>
-                <p>Full film pipeline: writing, directing, shooting, and editing.</p>
-            </div>
-            <div class="service-box">
-                <h3>📸 Content Creation</h3>
-                <p>Social media visuals, reels, promos, and high-impact digital content.</p>
-            </div>
-            <div class="service-box">
-                <h3>🎬 Creative Direction</h3>
-                <p>Brand storytelling, concept development, and artistic planning.</p>
-            </div>
-        </div>
-    </section>
+  <section style="margin-top:18px">
+    <div class="ad" id="midAd">Ad placeholder — 728x90 or sponsor slot</div>
+  </section>
 
-    <!-- CONTACT -->
-    <section id="contact">
-        <h2 class="section-title">Contact</h2>
-        <p>Email us at: <b>venturegateproductions@gmail.com</b></p>
-    </section>
+  <section id="about" style="margin-top:20px;padding:18px;background:rgba(255,255,255,0.02);border-radius:10px">
+    <h3 style="margin-top:0">About VentureGate</h3>
+    <p style="color:var(--muted)">VentureGate Productions showcases short films and serialized stories. This front-end embeds hosted video sources (YouTube/Vimeo). For upload support and an admin uploader integrate with Firebase / Supabase (we can add that next).</p>
+  </section>
+</main>
 
-    <!-- FOOTER -->
-    <footer>
-        © 2025 VentureGate Productions. All rights reserved.
-    </footer>
+<!-- Player modal -->
+<div id="playerModal" class="player-modal" onclick="if(event.target.id==='playerModal')closePlayer()">
+  <div class="player-box" role="dialog" aria-modal="true">
+    <div class="player-head">
+      <h4 id="playerTitle">Playing</h4>
+      <div style="display:flex;gap:8px;align-items:center;padding-right:8px">
+        <button id="addToWatchlist" class="btn" style="background:#0ea5a1">+ Watchlist</button>
+        <button onclick="closePlayer()" class="btn" style="background:#b91c1c">Close</button>
+      </div>
+    </div>
+    <iframe id="playerFrame" class="player-iframe" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    <div style="padding:10px;color:var(--muted);display:flex;justify-content:space-between;align-items:center">
+      <div id="playerMeta"></div>
+      <div style="font-size:0.9rem;color:var(--muted)"><span id="progressLabel"></span></div>
+    </div>
+  </div>
+</div>
 
-    <script>
-        function toggleMenu() {
-            let nav = document.getElementById("navMenu");
-            nav.style.display = nav.style.display === "block" ? "none" : "block";
-        }
-    </script>
+<footer>
+  © 2025 VentureGate Productions. All Rights Reserved.
+</footer>
 
+<!-- Cookie bar -->
+<div id="cookieBar" style="position:fixed;left:14px;right:14px;bottom:14px;background:#061426;padding:12px;border-radius:10px;display:flex;justify-content:space-between;gap:12px;align-items:center">
+  <div style="color:var(--muted)">This site uses cookies for analytics and to enable ad placeholders. By continuing you accept our cookie policy.</div>
+  <div style="display:flex;gap:8px">
+    <button onclick="acceptCookies()" class="btn">Accept</button>
+    <button onclick="rejectCookies()" style="background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px;border-radius:8px">Reject</button>
+  </div>
+</div>
+
+<script>
+/* ============================
+   === EDIT FILMS BELOW ===
+   Add your films here. For YouTube use type: "youtube" and set id: "YOUTUBE_ID"
+   For Vimeo use type: "vimeo" and id: "VIMEO_ID" (vimeo player URL used).
+   poster: URL to poster image (host in repo or external).
+   tags: array of categories/tags.
+   Example YouTube embed: https://www.youtube.com/embed/VIDEO_ID
+   ============================ */
+const films = [
+  {
+    id: "VIDEO_ID_1",
+    type: "youtube",
+    title: "Sample Short — The First Cut",
+    desc: "6m • Belfast • 2025",
+    poster: "https://i.ytimg.com/vi/VIDEO_ID_1/maxresdefault.jpg",
+    runtime: "6m",
+    year: "2025",
+    tags: ["comedy","short"]
+  },
+  {
+    id: "VIDEO_ID_2",
+    type: "youtube",
+    title: "Pilot Episode — The Streets",
+    desc: "22m • Series Pilot",
+    poster: "https://i.ytimg.com/vi/VIDEO_ID_2/maxresdefault.jpg",
+    runtime: "22m",
+    year: "2025",
+    tags: ["drama","series"]
+  }
+];
+// ========================= END EDIT FILMS =========================
+
+/* ---------- Utility / Render ---------- */
+const grid = document.getElementById('grid');
+const tagList = document.getElementById('tagList');
+const search = document.getElementById('search');
+const sortSel = document.getElementById('sort');
+const cookieBar = document.getElementById('cookieBar');
+
+let currentFilter = 'all';
+let watchlist = JSON.parse(localStorage.getItem('vg_watchlist')||'[]');
+let prog = JSON.parse(localStorage.getItem('vg_progress')||'{}');
+
+function uniqueTags(arr){
+  const s=new Set(); arr.forEach(f=>f.tags.forEach(t=>s.add(t)));
+  return Array.from(s);
+}
+
+function renderTags(){
+  const tags = uniqueTags(films);
+  tagList.innerHTML = '';
+  const all = document.createElement('div'); all.className='chip ' + (currentFilter==='all'?'active':''); all.textContent='All';
+  all.onclick = ()=>{ currentFilter='all'; render(); renderTags(); }; tagList.appendChild(all);
+  tags.forEach(t=>{
+    const el = document.createElement('div'); el.className='chip ' + (currentFilter===t?'active':''); el.textContent=t;
+    el.onclick = ()=>{ currentFilter=t; render(); renderTags(); };
+    tagList.appendChild(el);
+  });
+}
+
+function filterFilms(){
+  const q = (search.value||'').toLowerCase();
+  return films.filter(f=>{
+    if(currentFilter!=='all' && !f.tags.includes(currentFilter)) return false;
+    if(!q) return true;
+    return (f.title+f.desc+(f.tags||[]).join(' ')+f.year).toLowerCase().includes(q);
+  });
+}
+
+function sortFilms(list){
+  const s = sortSel.value;
+  if(s==='new') return list.sort((a,b)=> (b.year||0) - (a.year||0));
+  if(s==='old') return list.sort((a,b)=> (a.year||0) - (b.year||0));
+  if(s==='az') return list.sort((a,b)=> a.title.localeCompare(b.title));
+  return list;
+}
+
+function render(){
+  grid.innerHTML = '';
+  let list = filterFilms();
+  list = sortFilms(list);
+  if(list.length===0){ grid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--muted)">No films found</div>'; return; }
+  list.forEach(f=>{
+    const art=document.createElement('article'); art.className='card';
+    const pst=document.createElement('div'); pst.className='poster';
+    const img=document.createElement('img'); img.src=f.poster; img.alt=f.title;
+    pst.appendChild(img);
+    const meta=document.createElement('div'); meta.className='meta';
+    const h=document.createElement('h3'); h.textContent=f.title;
+    const p=document.createElement('p'); p.textContent=f.desc;
+    const btnWrap=document.createElement('div'); btnWrap.style.display='flex'; btnWrap.style.justifyContent='space-between'; btnWrap.style.marginTop='10px';
+    const play=document.createElement('button'); play.className='btn'; play.textContent='Play'; play.onclick = ()=>openPlayer(f);
+    const wish=document.createElement('button'); wish.className='btn'; wish.style.background='#0ea5a1'; wish.textContent = watchlist.includes(f.id)?'In Watchlist':'+ Watchlist';
+    wish.onclick = (e)=>{ e.stopPropagation(); toggleWatchlist(f); render(); };
+    btnWrap.appendChild(play); btnWrap.appendChild(wish);
+
+    meta.appendChild(h); meta.appendChild(p); meta.appendChild(btnWrap);
+    art.appendChild(pst); art.appendChild(meta);
+    grid.appendChild(art);
+  });
+}
+
+/* ---------- Player ---------- */
+const playerModal = document.getElementById('playerModal');
+const playerFrame = document.getElementById('playerFrame');
+const playerTitle = document.getElementById('playerTitle');
+const playerMeta = document.getElementById('playerMeta');
+const addToWatchlistBtn = document.getElementById('addToWatchlist');
+
+let lastOpened = null;
+
+function embedUrl(f){
+  if(f.type==='youtube') return `https://www.youtube.com/embed/${f.id}?rel=0&autoplay=1&modestbranding=1&playsinline=1`;
+  if(f.type==='vimeo') return `https://player.vimeo.com/video/${f.id}?autoplay=1`;
+  return f.url||'';
+}
+
+function openPlayer(f){
+  lastOpened = f;
+  playerTitle.textContent = f.title;
+  playerMeta.textContent = `${f.runtime || ''} • ${f.year || ''} • ${f.tags.join(', ')}`;
+  addToWatchlistBtn.textContent = watchlist.includes(f.id)?'In Watchlist':'+ Watchlist';
+  playerFrame.src = embedUrl(f);
+  playerModal.style.display='flex';
+  // store last played
+  localStorage.setItem('vg_last', JSON.stringify({id:f.id, at:new Date().toISOString()}));
+}
+
+function closePlayer(){
+  playerFrame.src = '';
+  playerModal.style.display='none';
+}
+
+/* ---------- Watchlist ---------- */
+function toggleWatchlist(f){
+  if(watchlist.includes(f.id)){
+    watchlist = watchlist.filter(x=>x!==f.id);
+  } else {
+    watchlist.push(f.id);
+  }
+  localStorage.setItem('vg_watchlist', JSON.stringify(watchlist));
+}
+
+/* ---------- Watchlist modal (simple) ---------- */
+document.getElementById('openWatchlist').onclick = ()=> {
+  const content = watchlist.length? watchlist.map(id=> films.find(x=>x.id===id)).filter(Boolean).map(f=>`<div style="padding:8px;border-bottom:1px solid rgba(255,255,255,0.03)"><b>${escapeHtml(f.title)}</b> • ${escapeHtml(f.desc)} <button style="float:right" onclick="(function(){ toggleWatchlist(f); render(); })()">Remove</button></div>`).join('') : '<div style="padding:12px;color:var(--muted)">Your watchlist is empty</div>';
+  // quick modal
+  const w = window.open('', 'watchlist', 'width=540,height=720');
+  w.document.write(`<body style="background:#071225;color:#fff;font-family:Inter,system-ui;padding:14px"><h2>Watchlist</h2>${content}</body>`);
+}
+
+/* ---------- helpers ---------- */
+function escapeHtml(s){return String(s||'').replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+
+/* ---------- Search & sort handlers ---------- */
+search.addEventListener('keydown', (e)=>{ if(e.key==='Enter') render(); });
+sortSel.addEventListener('change', render);
+
+/* ---------- Tags / initial render ---------- */
+renderTags();
+render();
+
+/* ---------- Cookie bar ---------- */
+if(localStorage.getItem('vg_cookies')) cookieBar.style.display='none';
+function acceptCookies(){ localStorage.setItem('vg_cookies','1'); cookieBar.style.display='none'; }
+function rejectCookies(){ localStorage.setItem('vg_cookies','0'); cookieBar.style.display='none'; }
+
+/* ---------- Small convenience: replace and open specific film via URL param ?play=VIDEO_ID ---------- */
+(function(){
+  const params = new URLSearchParams(location.search);
+  if(params.has('play')){
+    const id=params.get('play');
+    const f = films.find(x=>x.id===id);
+    if(f) setTimeout(()=>openPlayer(f),400);
+  }
+})();
+</script>
+
+<!-- AD SCRIPTS / Analytics: add after you have accounts -->
+<!-- Example (DO NOT add AdSense until approved):
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+-->
 </body>
 </html>
