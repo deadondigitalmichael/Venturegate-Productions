@@ -1,505 +1,165 @@
-<!doctype html>
+<!-- Full updated index.html with requested features -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>VentureGate Productions — Stream</title>
-<meta name="description" content="VentureGate Productions — Belfast short films & series" />
-<link rel="icon" href="logo.png" />
-
-<!--
-  VentureGate "E — Belfast vibe" single-file site
-  - Replace logo.png with your logo file (same folder)
-  - Edit the `films` array in the script section below (search for "=== EDIT FILMS ===")
-  - For YouTube use type: "youtube" and id: "<YOUTUBE_ID>"
-  - For Vimeo use type: "vimeo" and id: "<VIMEO_ID>"
--->
-
-<style>
-  /* ---------- Variables & base ---------- */
-  :root{
-    --bg0:#061016;
-    --bg1:#0b1720;
-    --panel:#071821;
-    --muted:#a8b1b9;
-    --accent:#e13b2b; /* VentureGate neon / gritty red */
-    --accent-2:#00d1ff; /* neon cyan for contrast */
-    --glass: rgba(255,255,255,0.03);
-    --card: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.05));
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;
-    background: radial-gradient(1200px 600px at 10% 10%, rgba(225,59,43,0.03), transparent 12%),
-                linear-gradient(180deg,var(--bg0),var(--bg1));
-    color:#eef6f8;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-  }
-  a{color:inherit}
-  img{max-width:100%;display:block}
-
-  /* ---------- Header ---------- */
-  header{
-    position:fixed;top:0;left:0;right:0;height:72px;padding:10px 28px;display:flex;align-items:center;gap:18px;
-    z-index:120;background:linear-gradient(180deg, rgba(3,6,8,0.6), rgba(3,6,8,0.25));backdrop-filter: blur(6px);
-    border-bottom:1px solid rgba(255,255,255,0.02);
-  }
-  .brand{display:flex;gap:12px;align-items:center;min-width:260px}
-  .brand img.logo{height:46px;width:auto;border-radius:6px;box-shadow:0 6px 18px rgba(225,59,43,0.06)}
-  .brand h1{margin:0;font-size:1.05rem;letter-spacing:1px}
-  .search{flex:1;display:flex;align-items:center;gap:12px}
-  input.searchbox{width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);color:var(--muted)}
-  .nav-actions{display:flex;gap:12px;align-items:center}
-
-  .btn{
-    border:0;padding:9px 12px;border-radius:10px;font-weight:700;cursor:pointer;
-    background:linear-gradient(90deg,var(--accent), #ff7b60); color:#071015;
-    box-shadow:0 8px 22px rgba(225,59,43,0.12);
-  }
-  .ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:8px 10px;border-radius:10px}
-
-  /* ---------- Hero ---------- */
-  .hero{
-    margin-top:72px;
-    min-height:56vh;
-    display:flex;
-    align-items:center;
-    gap:24px;
-    padding:48px 6%;
-    position:relative;
-    overflow:hidden;
-  }
-  .hero-left{flex:1;z-index:3;max-width:780px}
-  .eyebrow{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,0.35);color:var(--accent-2);font-weight:700;margin-bottom:12px}
-  .hero h2{font-size:3rem;margin:6px 0 10px;line-height:1.03;letter-spacing:-1px}
-  .hero p{color:var(--muted);max-width:56ch;font-size:1.05rem}
-  .hero-cta{display:flex;gap:12px;margin-top:18px}
-
-  /* Cinematic background texture & neon slashes */
-  .grain{position:absolute;inset:0;pointer-events:none;background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><filter id="g"><feTurbulence baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23g)" opacity="0.02" /></svg>');opacity:0.22}
-  .neon-slab{position:absolute;right:-10%;top:6%;width:60%;height:100%;background:linear-gradient(120deg, rgba(225,59,43,0.06), rgba(0,209,255,0.03));transform: skewX(-12deg); filter:blur(18px);opacity:0.9}
-
-  /* Hero poster */
-  .hero-poster{width:480px;max-width:44%;border-radius:12px;overflow:hidden;box-shadow: 0 30px 80px rgba(2,6,10,0.7);border:1px solid rgba(255,255,255,0.03);background:#000}
-  .hero-poster .poster-img{display:block;width:100%;height:auto}
-
-  /* ---------- Rows / carousels ---------- */
-  .section{padding:36px 6% 20px}
-  .section h3{margin:0 0 10px;font-size:1.25rem}
-  .row{margin-top:12px}
-  .row .rail{display:flex;gap:12px;overflow:auto;padding-bottom:12px;scrollbar-width:none}
-  .card{
-    min-width:220px;background:var(--card);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.02);
-    transition: transform .25s ease, box-shadow .25s ease;
-  }
-  .card:hover{transform: translateY(-8px) scale(1.03);box-shadow:0 18px 44px rgba(2,8,12,0.55)}
-  .card .thumb{position:relative;padding-top:56.25%;background:#000}
-  .card .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  .card .info{padding:10px}
-  .card h4{margin:0 0 6px;font-size:1rem}
-  .card p{margin:0;color:var(--muted);font-size:0.9rem}
-
-  /* shimmer hover overlay */
-  .card .overlay{position:absolute;inset:auto 8px 8px 8px;height:44px;border-radius:8px;background:linear-gradient(90deg, rgba(0,0,0,0.45), rgba(225,59,43,0.06));display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
-  .card:hover .overlay{opacity:1}
-
-  /* ---------- Player modal ---------- */
-  .player-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(rgba(2,6,10,0.7), rgba(2,6,10,0.9));z-index:220;padding:20px}
-  .player-card{width:92%;max-width:1100px;border-radius:12px;overflow:hidden;background:#021018;border:1px solid rgba(255,255,255,0.03)}
-  .player-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:linear-gradient(180deg, rgba(0,0,0,0.15), transparent)}
-  .player-iframe{width:100%;height:62vh;border:0;background:#000;display:block}
-
-  /* ---------- Small utils ---------- */
-  .muted{color:var(--muted)}
-  .ad{margin-top:16px;padding:12px;border-radius:10px;background:linear-gradient(180deg,#071016,#081822);border:1px dashed rgba(255,255,255,0.04);text-align:center;color:var(--muted)}
-  footer{padding:20px 6%;text-align:center;color:var(--muted);margin-top:40px;font-size:0.95rem}
-
-  /* responsive */
-  @media(max-width:1000px){
-    .hero{flex-direction:column;align-items:flex-start;padding:30px 5%}
-    .hero-left{max-width:100%}
-    .hero-poster{max-width:86%;width:86%}
-    .card{min-width:170px}
-  }
-  @media(max-width:640px){
-    header{padding:10px 14px;height:64px}
-    .brand h1{display:none}
-    .hero h2{font-size:1.9rem}
-    .hero p{font-size:0.95rem}
-    .hero-poster{display:none}
-    .row .rail{gap:10px}
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cinestream+</title>
+  <style>
+    body {
+      margin: 0;
+      background: #0a0a0f;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    header {
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      background: #111118;
+      border-bottom: 2px solid #1f1f2e;
+      text-shadow: 0 0 8px #6ff;
+    }
+    .section-title {
+      font-size: 22px;
+      margin: 20px;
+      text-shadow: 0 0 6px #00f0ff;
+    }
+    .carousel {
+      display: flex;
+      overflow-x: auto;
+      gap: 12px;
+      padding: 0 20px 20px 20px;
+    }
+    .carousel-item {
+      width: 220px;
+      height: 130px;
+      background: #1c1c28;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6ff;
+      cursor: pointer;
+      box-shadow: 0 0 12px #0ff5;
+    }
+    .episode-page {
+      padding: 20px;
+    }
+    .admin {
+      padding: 20px;
+      background: #14141f;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+    }
+    .hidden { display: none; }
+  </style>
 </head>
 <body>
+  <header>CINESTREAM+</header>
 
-<header>
-  <div class="brand">
-    <img src="logo.png" alt="VentureGate logo" class="logo" id="logoImg" onerror="this.style.display='none'">
-    <div>
-      <h1>VentureGate</h1>
-      <div class="muted" style="font-size:0.85rem">Belfast • Indie Films & Series</div>
-    </div>
-  </div>
+  <div id="app"></div>
 
-  <div class="search">
-    <input id="searchInput" class="searchbox" type="search" placeholder="Search titles, tags, year — press Enter" />
-  </div>
+  <script>
+    const ADMIN_PASSWORD = "GT6gc4MN";
 
-  <div class="nav-actions">
-    <button id="adminBtn" class="ghost" title="Admin panel (local password)">Admin</button>
-    <button id="watchlistBtn" class="btn">Watchlist</button>
-  </div>
-</header>
+    const state = {
+      loggedIn: false,
+      continueWatching: [],
+      episodes: [],
+      adminMode: false
+    };
 
-<main>
-  <div class="hero">
-    <div class="neon-slab"></div>
-    <div class="grain"></div>
+    function render() {
+      const app = document.getElementById("app");
 
-    <div class="hero-left">
-      <span class="eyebrow">NEW &amp; EXCLUSIVE</span>
-      <h2 id="heroTitle">VentureGate Presents — The Belfast Collection</h2>
-      <p id="heroSub">Grit. Heart. Laughs. We showcase short films and serialized productions rooted in Belfast life — ready to stream for free.</p>
+      if (state.adminMode === true) return renderAdmin();
 
-      <div class="hero-cta">
-        <button id="playHero" class="btn">Play Latest</button>
-        <button id="heroWL" class="ghost">+ Watchlist</button>
-      </div>
+      app.innerHTML = `
+        <h2 class='section-title'>Continue Watching</h2>
+        <div class='carousel'>
+          ${state.continueWatching.map(e => `<div class='carousel-item'>${e.title}</div>`).join('')}
+        </div>
 
-      <div style="margin-top:20px" id="heroTags"></div>
-    </div>
+        <h2 class='section-title'>Episodes</h2>
+        <div class='carousel'>
+          ${state.episodes.map((e,i) => `
+            <div class='carousel-item' onclick='openEpisode(${i})'>${e.title}</div>`).join('')}
+        </div>
 
-    <div class="hero-poster" id="heroPosterWrap" role="img" aria-label="Featured poster">
-      <img id="heroPoster" class="poster-img" src="" alt="Featured film poster">
-    </div>
-  </div>
+        <button onclick='enterAdmin()'>Admin Login</button>
+      `;
+    }
 
-  <section class="section">
-    <h3>Spotlight</h3>
-    <div class="row">
-      <div class="rail" id="spotlightRail" aria-hidden="false"></div>
-    </div>
-  </section>
+    function openEpisode(i) {
+      const e = state.episodes[i];
+      const app = document.getElementById("app");
 
-  <section class="section">
-    <h3>Comedies</h3>
-    <div class="row">
-      <div class="rail" id="comedyRail"></div>
-    </div>
+      state.continueWatching.push(e);
 
-    <h3 style="margin-top:22px">Dramas</h3>
-    <div class="row">
-      <div class="rail" id="dramaRail"></div>
-    </div>
-  </section>
+      app.innerHTML = `
+        <div class='episode-page'>
+          <h2>${e.title}</h2>
+          <p>${e.description}</p>
+          <strong>Cast:</strong>
+          <ul>${e.cast.map(c => `<li>${c}</li>`).join('')}</ul>
 
-  <section class="section" id="moreSection">
-    <h3>All Films</h3>
-    <div class="row"><div class="rail" id="allRail"></div></div>
+          <div style='margin-top:20px;'>
+            <iframe width="100%" height="320" src="${e.video}" frameborder="0" allowfullscreen></iframe>
+          </div>
 
-    <div class="ad" id="adSlot">Ad / Sponsor slot — replace with sponsor image or AdSense when ready</div>
-  </section>
+          <button onclick='render()'>Back</button>
+        </div>
+      `;
+    }
 
-  <section style="padding:32px 6% 80px">
-    <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
-      <div style="flex:1;min-width:260px">
-        <h3 style="margin-top:0">About VentureGate</h3>
-        <p class="muted">VentureGate Productions is an indie collective based in Belfast creating shorts and serialised comedy/drama. Use this site to stream free, or contact us to sponsor content or request screenings.</p>
-      </div>
-      <div style="min-width:220px">
-        <a class="btn" href="mailto:venturegateproductions@gmail.com" style="display:inline-block">Contact Us</a>
-      </div>
-    </div>
-  </section>
-</main>
+    function enterAdmin() {
+      const pass = prompt("Enter admin password");
+      if (pass === ADMIN_PASSWORD) {
+        state.adminMode = true;
+        renderAdmin();
+      } else alert("Incorrect password");
+    }
 
-<!-- Player modal -->
-<div id="playerModal" class="player-modal" aria-hidden="true">
-  <div class="player-card" role="dialog" aria-modal="true" aria-label="Video player">
-    <div class="player-head">
-      <div>
-        <strong id="playerTitle">Now Playing</strong>
-        <div id="playerMeta" class="muted" style="font-size:0.9rem"></div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <button id="playerWL" class="ghost">+ Watchlist</button>
-        <button id="closePlayer" class="btn" style="background:#b91c1c">Close</button>
-      </div>
-    </div>
-    <iframe id="playerFrame" class="player-iframe" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-    <div style="padding:10px 14px;color:var(--muted);display:flex;justify-content:space-between;align-items:center">
-      <div id="playerDesc"></div>
-      <div id="playerProgress" class="muted"></div>
-    </div>
-  </div>
-</div>
+    function renderAdmin() {
+      const app = document.getElementById("app");
+      app.innerHTML = `
+        <div class='admin'>
+          <h2>Admin Dashboard</h2>
+          <p>Add New Episode</p>
+          <input id='t' placeholder='Title'>
+          <input id='d' placeholder='Description'>
+          <input id='c' placeholder='Cast (comma separated)'>
+          <input id='v' placeholder='YouTube/Vimeo Embed URL'>
+          <button onclick='addEpisode()'>Upload Episode</button>
+          <button onclick='exitAdmin()'>Exit Admin</button>
+        </div>
+      `;
+    }
 
-<footer>
-  © 2025 VentureGate Productions. All Rights Reserved. • Privacy · Cookies · Terms
-</footer>
+    function addEpisode() {
+      state.episodes.push({
+        title: document.getElementById('t').value,
+        description: document.getElementById('d').value,
+        cast: document.getElementById('c').value.split(',').map(x => x.trim()),
+        video: document.getElementById('v').value
+      });
+      alert("Episode Added!");
+    }
 
-<!-- cookie bar -->
-<div id="cookieBar" style="position:fixed;left:14px;right:14px;bottom:14px;background:#061426;padding:12px;border-radius:10px;display:flex;justify-content:space-between;gap:12px;align-items:center;z-index:300">
-  <div style="color:var(--muted)">This site uses cookies for analytics and to enable ad placeholders. Accept to continue.</div>
-  <div style="display:flex;gap:8px">
-    <button onclick="acceptCookies()" class="btn">Accept</button>
-    <button onclick="rejectCookies()" class="ghost">Reject</button>
-  </div>
-</div>
+    function exitAdmin() {
+      state.adminMode = false;
+      render();
+    }
 
-<script>
-/* ============================
-   === EDIT FILMS BELOW ===
-   - For YouTube: type: "youtube", id: "VIDEO_ID"
-   - For Vimeo: type: "vimeo", id: "VIMEO_ID"
-   - poster: URL to poster image (repo file like "posters/film1.jpg" or external URL)
-   - tags: array of tags (for rails)
-   - featured: boolean to show in Spotlight
-   ============================ */
-const films = [
-  /* Example entries — replace these with your own.
-     Use YouTube IDs (the part after v= in a video URL) or Vimeo IDs.
-  */
-  {
-    id: "https://youtu.be/3RjJHcOiWto?si=NtY0wYTaM1wTYgSC",
-    type: "youtube",
-    title: "Steps Toward Change ep 1",
-    desc: "An investigative piece into the opinions of grassroots musicians and industry workers",
-    poster: "https://i.ytimg.com/vi/VIDEO_ID_1/maxresdefault.jpg",
-    runtime: "29m",
-    year: "2025",
-    tags: ["drama","decumentary"],
-    featured: true
-  },
-  {
-    id: "https://youtu.be/Lix1RT8vkCk?si=b9CSjc4QfVThVID1",
-    type: "youtube",
-    title: "Steps Toward Change ep 2",
-    desc: "An investigative piece into the opinions of grassroots musicians and industry workers",
-    poster: "https://i.ytimg.com/vi/VIDEO_ID_1/maxresdefault.jpg",
-    runtime: "29m",
-    year: "2025",
-    tags: ["drama","decumentary"],
-    featured: true
-  }
-];
-/* ========================= END EDIT FILMS ========================= */
-
-/* ---------- State & Utilities ---------- */
-const spotRail = document.getElementById('spotlightRail');
-const comedyRail = document.getElementById('comedyRail');
-const dramaRail = document.getElementById('dramaRail');
-const allRail = document.getElementById('allRail');
-const heroTitle = document.getElementById('heroTitle');
-const heroSub = document.getElementById('heroSub');
-const heroPoster = document.getElementById('heroPoster');
-const heroTags = document.getElementById('heroTags');
-const playHero = document.getElementById('playHero');
-const heroWL = document.getElementById('heroWL');
-
-const playerModal = document.getElementById('playerModal');
-const playerFrame = document.getElementById('playerFrame');
-const playerTitle = document.getElementById('playerTitle');
-const playerMeta = document.getElementById('playerMeta');
-const playerDesc = document.getElementById('playerDesc');
-const playerWLbtn = document.getElementById('playerWL');
-
-let watchlist = JSON.parse(localStorage.getItem('vg_watchlist')||'[]');
-let progress = JSON.parse(localStorage.getItem('vg_progress')||'{}');
-let lastPlayed = JSON.parse(localStorage.getItem('vg_last')||'null');
-const searchInput = document.getElementById('searchInput');
-
-/* ---------- Helper functions ---------- */
-function embedUrl(f){
-  if(f.type==='youtube') return `https://www.youtube.com/embed/${f.id}?rel=0&autoplay=1&modestbranding=1&playsinline=1`;
-  if(f.type==='vimeo') return `https://player.vimeo.com/video/${f.id}?autoplay=1`;
-  return f.url || '';
-}
-function createCard(f){
-  const el = document.createElement('div'); el.className='card';
-  const thumb = document.createElement('div'); thumb.className='thumb';
-  const img = document.createElement('img'); img.src=f.poster; img.alt=f.title;
-  thumb.appendChild(img);
-  const info = document.createElement('div'); info.className='info';
-  const h = document.createElement('h4'); h.textContent=f.title;
-  const p = document.createElement('p'); p.textContent = f.desc;
-  const overlay = document.createElement('div'); overlay.className='overlay'; overlay.textContent='Play';
-  overlay.style.position='absolute'; overlay.style.bottom='8px'; overlay.style.left='8px'; overlay.style.right='8px'; overlay.style.height='40px';
-  overlay.style.display='flex'; overlay.style.alignItems='center'; overlay.style.justifyContent='center'; overlay.style.fontWeight='700';
-  overlay.style.color='#fff';
-  thumb.style.position='relative';
-  thumb.appendChild(overlay);
-  el.appendChild(thumb);
-  info.appendChild(h); info.appendChild(p);
-  const btns = document.createElement('div'); btns.style.display='flex'; btns.style.gap='8px'; btns.style.marginTop='10px';
-  const play = document.createElement('button'); play.className='btn'; play.textContent='Play'; play.onclick = ()=>openPlayer(f);
-  const wl = document.createElement('button'); wl.className='ghost'; wl.textContent = watchlist.includes(f.id)?'In Watchlist':'+ Watchlist';
-  wl.onclick = (e)=>{ e.stopPropagation(); toggleWatchlist(f); wl.textContent = watchlist.includes(f.id)?'In Watchlist':'+ Watchlist'; };
-  btns.appendChild(play); btns.appendChild(wl);
-  info.appendChild(btns);
-  el.appendChild(info);
-  return el;
-}
-function sortByYearDesc(a,b){ return (b.year||0)-(a.year||0); }
-
-/* ---------- Render rails ---------- */
-function renderRails(){
-  // Spotlight: featured (first 6)
-  spotRail.innerHTML=''; comedyRail.innerHTML=''; dramaRail.innerHTML=''; allRail.innerHTML='';
-  const featured = films.filter(f=>f.featured).sort(sortByYearDesc).slice(0,6);
-  featured.forEach(f=> spotRail.appendChild(createCard(f)));
-  // genre rails
-  films.filter(f=>f.tags.includes('comedy')).sort(sortByYearDesc).forEach(f=> comedyRail.appendChild(createCard(f)));
-  films.filter(f=>f.tags.includes('drama')).sort(sortByYearDesc).forEach(f=> dramaRail.appendChild(createCard(f)));
-  // all
-  films.slice().sort(sortByYearDesc).forEach(f=> allRail.appendChild(createCard(f)));
-
-  // set hero to first featured or first film
-  const hero = featured[0] || films[0] || null;
-  if(hero){
-    heroTitle.textContent = hero.title;
-    heroSub.textContent = hero.desc;
-    heroPoster.src = hero.poster;
-    heroPoster.alt = hero.title;
-    heroTags.innerHTML = hero.tags.map(t=>`<span class="eyebrow" style="display:inline-block;margin-right:8px">${t}</span>`).join('');
-    playHero.onclick = ()=> openPlayer(hero);
-    heroWL.onclick = ()=>{ toggleWatchlist(hero); heroWL.textContent = watchlist.includes(hero.id)?'In Watchlist':'+ Watchlist'; };
-    heroWL.textContent = watchlist.includes(hero.id)?'In Watchlist':'+ Watchlist';
-  }
-}
-
-/* ---------- Player ---------- */
-function openPlayer(f){
-  playerTitle.textContent = f.title;
-  playerMeta.textContent = `${f.runtime || ''} • ${f.year || ''} • ${f.tags.join(', ')}`;
-  playerDesc.textContent = f.desc;
-  playerWLbtn.textContent = watchlist.includes(f.id)?'In Watchlist':'+ Watchlist';
-  playerWLbtn.onclick = ()=>{ toggleWatchlist(f); playerWLbtn.textContent = watchlist.includes(f.id)?'In Watchlist':'+ Watchlist'; };
-  playerFrame.src = embedUrl(f);
-  playerModal.style.display='flex'; playerModal.setAttribute('aria-hidden','false');
-  // store last played
-  localStorage.setItem('vg_last', JSON.stringify({id:f.id, at:new Date().toISOString()}));
-}
-document.getElementById('closePlayer').onclick = closePlayer;
-function closePlayer(){
-  playerFrame.src = '';
-  playerModal.style.display='none';
-  playerModal.setAttribute('aria-hidden','true');
-}
-
-/* ---------- Watchlist ---------- */
-function toggleWatchlist(f){
-  if(watchlist.includes(f.id)){
-    watchlist = watchlist.filter(x=>x!==f.id);
-  } else { watchlist.push(f.id); }
-  localStorage.setItem('vg_watchlist', JSON.stringify(watchlist));
-}
-
-/* ---------- Watchlist viewer ---------- */
-document.getElementById('watchlistBtn').onclick = ()=>{
-  const list = watchlist.map(id => films.find(f=>f.id===id)).filter(Boolean);
-  if(list.length===0){ alert('Your watchlist is empty'); return; }
-  // open small modal window
-  let html = '<div style="font-family:Inter,system-ui;padding:12px;color:#fff;background:#071220">';
-  html += '<h2>Watchlist</h2>';
-  list.forEach(f=>{
-    html += `<div style="padding:8px;border-bottom:1px solid rgba(255,255,255,0.04)"><b>${escapeHtml(f.title)}</b> • ${escapeHtml(f.desc)} <button style="float:right" onclick="window.parent.removeFromWatchlist(\\'${escapeHtml(f.id)}\\')">Remove</button></div>`;
-  });
-  html += '</div>';
-  const w = window.open('', 'vg_watchlist','width=520,height=700');
-  w.document.write(html);
-  w.document.close();
-};
-/* helper used by watchlist popup */
-function removeFromWatchlist(id){
-  watchlist = watchlist.filter(x=>x!==id);
-  localStorage.setItem('vg_watchlist', JSON.stringify(watchlist));
-  alert('Removed from watchlist. Refresh site to update.');
-}
-
-/* ---------- Search ---------- */
-searchInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') doSearch(); });
-function doSearch(){
-  const q = (searchInput.value||'').toLowerCase().trim();
-  if(!q){ renderRails(); return; }
-  const res = films.filter(f=>{
-    return (f.title + ' ' + f.desc + ' ' + (f.tags||[]).join(' ') + ' ' + (f.year||'')).toLowerCase().includes(q);
-  });
-  // show results in AllFilms rail
-  allRail.innerHTML=''; res.forEach(f=> allRail.appendChild(createCard(f)));
-  // scroll to allSection
-  document.getElementById('moreSection').scrollIntoView({behavior:'smooth'});
-}
-
-/* ---------- Cookie bar ---------- */
-if(localStorage.getItem('vg_cookies')) document.getElementById('cookieBar').style.display='none';
-function acceptCookies(){ localStorage.setItem('vg_cookies','1'); document.getElementById('cookieBar').style.display='none'; }
-function rejectCookies(){ localStorage.setItem('vg_cookies','0'); document.getElementById('cookieBar').style.display='none'; }
-
-/* ---------- Admin (local password for quick edits) ---------- */
-const adminBtn = document.getElementById('adminBtn');
-adminBtn.onclick = ()=> {
-  const pass = prompt('Admin password (local-only). Enter to open editor:');
-  if(pass !== 'venturegate-admin') { alert('Wrong password'); return; }
-  openAdminEditor();
-};
-function openAdminEditor(){
-  const data = JSON.stringify(films, null, 2);
-  const w = window.open('', 'vg_admin','width=900,height=720');
-  w.document.write(`<body style="background:#07121a;color:#fff;font-family:Inter,system-ui;padding:12px">
-    <h2>VentureGate — Local Admin Editor</h2>
-    <p style="color:#9fb0bd">Edit the films array below and paste the updated JSON into your index.html when done. This editor only updates localStorage for preview.</p>
-    <textarea id="json" style="width:100%;height:70%;background:#021018;color:#fff;border:1px solid rgba(255,255,255,0.04);padding:12px">${escapeHtml(data)}</textarea>
-    <div style="margin-top:8px">
-      <button id="save" style="padding:10px 14px;background:${'var(--accent)'};color:#071015;border:0;border-radius:8px">Save to local preview</button>
-      <button id="close" style="padding:10px 14px;margin-left:8px;border-radius:8px">Close</button>
-    </div>
-    <script>
-      document.getElementById('save').onclick = function(){
-        try{
-          const parsed = JSON.parse(document.getElementById('json').value);
-          localStorage.setItem('vg_preview_films', JSON.stringify(parsed));
-          alert('Saved to local preview. Close this window and reload the main site to see preview.');
-        }catch(e){ alert('Invalid JSON: '+e.message); }
-      };
-      document.getElementById('close').onclick = ()=> window.close();
-    <\/script>
-  </body>`);
-  w.document.close();
-}
-
-/* if preview JSON exists in localStorage (from admin editor), use that */
-(function(){
-  const preview = localStorage.getItem('vg_preview_films');
-  if(preview){
-    try{ const p = JSON.parse(preview); if(Array.isArray(p) && p.length) films.splice(0, films.length, ...p); }catch(e){}
-  }
-})();
-
-/* ---------- Utilities / init ---------- */
-function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, (m)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-renderRails();
-
-/* autoplay last played if ?play=VIDEO_ID param present */
-(function(){
-  const params = new URLSearchParams(location.search);
-  if(params.has('play')){
-    const id = params.get('play');
-    const f = films.find(x=>x.id===id);
-    if(f) setTimeout(()=>openPlayer(f), 300);
-  }
-})();
-
-/* small keyboard hide player (Esc) */
-document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closePlayer(); });
-
-</script>
+    render();
+  </script>
+</body>
+</html>
 
 <!-- AD / Analytics: add your scripts here once ready (AdSense only after approval) -->
 
-</body>
-</html>
