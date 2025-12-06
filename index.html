@@ -1,166 +1,306 @@
-<!-- Full updated index.html with requested features -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cinestream+</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VentureGate Productions — Belfast</title>
+  <meta name="description" content="VentureGate Productions — independent films, live sessions and documentaries from Belfast.">
   <style>
-    body {
-      margin: 0;
-      background: #0a0a0f url('https://i.imgur.com/1o7wFQy.png') no-repeat bottom center / contain;
-      color: white;
-      font-family: Arial, sans-serif;
+    /* GRITTY BELFAST THEME - dark, textured, cinematic */
+    :root{
+      --bg:#070709;
+      --panel:#0f1113;
+      --accent:#d9b27b; /* warmer brass accent */
+      --muted:#9aa0a6;
+      --glass: rgba(255,255,255,0.03);
+      --shadow: 0 8px 24px rgba(0,0,0,0.6);
+      --maxw:1200px;
     }
-    header {
-      padding: 20px;
-      font-size: 28px;
-      font-weight: bold;
-      background: #111118;
-      border-bottom: 2px solid #1f1f2e;
-      
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e9e9e9;background:var(--bg);}
+    /* subtle Belfast skyline watermark */
+    body::after{
+      content:'';position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:1200px;height:260px;pointer-events:none;opacity:0.06;background-repeat:no-repeat;background-position:center bottom;background-size:contain;background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 260"><g fill="none" stroke="white" stroke-width="2" stroke-opacity="0.25"><path d="M40 200 L40 120 L80 120 L80 60 L120 60 L120 160 L160 160 L160 70 L200 70 L200 150 L240 150 L240 110 L280 110 L280 60 L320 60 L320 200"/><path d="M380 200 L380 90 L420 90 L420 200"/><path d="M460 200 L460 40 L500 40 L500 200"/><path d="M540 200 L540 110 L580 110 L580 200"/><path d="M620 200 L620 30 L660 30 L660 200"/><path d="M700 200 L700 150 L740 150 L740 200"/><path d="M780 200 L780 60 L820 60 L820 200"/><path d="M860 200 L860 40 L900 40 L900 120 L940 120 L940 200"/></g></svg>');}
+
+    .site{max-width:var(--maxw);margin:0 auto;padding:28px}
+    header{display:flex;align-items:center;gap:18px;padding:18px 12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));box-shadow:var(--shadow);backdrop-filter:blur(6px)}
+    .logo{display:flex;align-items:center;gap:12px}
+    .crest{width:56px;height:56px;border-radius:8px;background:linear-gradient(135deg,#0b0b0f,#201b17);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.04)}
+    .crest svg{width:38px;height:38px;opacity:0.95}
+    h1{font-size:20px;margin:0}
+    .tag{color:var(--muted);font-size:13px}
+
+    .top-actions{margin-left:auto;display:flex;gap:10px;align-items:center}
+    button.cta{background:var(--accent);color:#111;padding:10px 14px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px 12px;border-radius:10px;cursor:pointer}
+
+    .hero{margin-top:28px;display:grid;grid-template-columns:1fr 420px;gap:24px;align-items:center}
+    .hero-left{padding:22px;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.06));border-radius:12px}
+    .eyebrow{font-size:12px;color:var(--muted);letter-spacing:1px}
+    .headline{font-size:36px;line-height:1.02;margin:10px 0}
+    .lead{color:var(--muted);margin-bottom:16px}
+
+    .hero-right{position:relative}
+    .billboard{width:100%;height:260px;border-radius:12px;overflow:hidden;background:#0c0c0d;border:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center}
+    .billboard img{width:100%;height:100%;object-fit:cover;opacity:0.98}
+
+    .rails{margin-top:26px}
+    .rail-title{font-size:18px;margin:12px 6px}
+    .rail{display:flex;gap:14px;overflow-x:auto;padding:12px 6px}
+    .card{min-width:200px;height:120px;background:var(--panel);border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:12px;box-shadow:0 6px 18px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.02)}
+    .card .meta{font-size:13px;color:var(--muted)}
+    .card .title{font-weight:700}
+
+    .grid{display:grid;grid-template-columns:1fr 340px;gap:20px;margin-top:20px}
+    .main{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));padding:16px;border-radius:12px}
+    .side{padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04))}
+
+    footer{margin-top:40px;color:var(--muted);font-size:13px;padding:18px}
+
+    /* small responsive tweaks */
+    @media(max-width:880px){
+      .hero{grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr}
+      .billboard{height:200px}
     }
-    .section-title {
-      font-size: 22px;
-      margin: 20px;
-      
-    }
-    .carousel {
-      display: flex;
-      overflow-x: auto;
-      gap: 12px;
-      padding: 0 20px 20px 20px;
-    }
-    .carousel-item {
-      width: 220px;
-      height: 130px;
-      background: #1c1c28;
-      border-radius: 8px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #6ff;
-      cursor: pointer;
-      box-shadow: 0 0 12px #0ff5;
-    }
-    .episode-page {
-      padding: 20px;
-    }
-    .admin {
-      padding: 20px;
-      background: #14141f;
-    }
-    input, button {
-      padding: 10px;
-      margin: 5px 0;
-      width: 100%;
-    }
-    .hidden { display: none; }
+
+    /* simple skeleton placeholders */
+    .placeholder{background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px dashed rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;color:var(--muted)}
+
+    .admin-panel{background:#0b0b0d;border-radius:10px;padding:12px}
+    input,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    label{display:block;margin:10px 0 6px;font-size:13px;color:var(--muted)}
   </style>
 </head>
 <body>
-  <header>VentureGate Productions — Belfast</header>
+  <div class="site">
+    <header>
+      <div class="logo">
+        <div class="crest" aria-hidden>
+          <!-- simple icon inspired by Harland & Wolff cranes (stylised) -->
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+            <rect x="6" y="34" width="52" height="6" rx="1" fill="rgba(255,255,255,0.06)"/>
+            <path d="M18 34v-16L26 12v22" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M46 34v-20L38 12v24" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <h1>VentureGate Productions</h1>
+          <div class="tag">Independent films • Live sessions • Belfast</div>
+        </div>
+      </div>
 
-  <div id="app"></div>
+      <div class="top-actions">
+        <button class="ghost" id="loginBtn">Login</button>
+        <button class="cta" id="upgradeBtn">Go Ad‑Free £25</button>
+      </div>
+    </header>
+
+    <div class="hero">
+      <div class="hero-left">
+        <div class="eyebrow">New Release</div>
+        <div class="headline">No Victim No Crime — Finished Cut</div>
+        <div class="lead">A gritty Belfast crime drama exploring loyalty, chaos, and survival. Click a card to play a demo (replace with your Vimeo/YouTube embed links).</div>
+        <div style="display:flex;gap:8px">
+          <button class="cta" onclick="playSample(0)">Play Episode</button>
+          <button class="ghost" onclick="openAdmin()">Admin</button>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="billboard placeholder" id="billboard">Billboard — Replace with poster image</div>
+      </div>
+    </div>
+
+    <div class="rails">
+      <div>
+        <div class="rail-title">Continue Watching</div>
+        <div class="rail" id="continueRail">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <div style="margin-top:14px">
+        <div class="rail-title">Featured</div>
+        <div class="rail" id="featuredRail">
+          <!-- featured cards -->
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="main">
+        <h3 style="margin-top:0">Episodes</h3>
+        <div id="episodeGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">
+          <!-- cards populated by JS -->
+        </div>
+      </div>
+      <aside class="side">
+        <h4>About VentureGate</h4>
+        <p class="lead" style="color:var(--muted)">VentureGate champions Belfast storytelling — films, docs and live music sessions from the local scene.</p>
+
+        <div style="margin-top:14px">
+          <h4 style="margin-bottom:8px">Quick Links</h4>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <a href="#" style="color:var(--muted);text-decoration:none">Contact</a>
+            <a href="#" style="color:var(--muted);text-decoration:none">Privacy Policy</a>
+            <a href="#" style="color:var(--muted);text-decoration:none">Terms</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>© 2025 VentureGate Productions — Belfast • Built for indie creators</footer>
+
+    <!-- Admin modal (hidden) -->
+    <div id="adminModal" class="hidden" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:20px">
+      <div class="admin-panel" style="width:760px;">
+        <h3>Admin Dashboard</h3>
+        <div id="adminContent"></div>
+        <div style="margin-top:12px;text-align:right"><button onclick="closeAdmin()" class="ghost">Close</button></div>
+      </div>
+    </div>
+
+  </div>
 
   <script>
-    const ADMIN_PASSWORD = "GT6gc4MN";
+    // --- CONFIG
+    // admin password: change if you like (current set by you earlier)
+    const ADMIN_PASSWORD = 'GT6gc4MN';
 
-    const state = {
-      loggedIn: false,
+    // placeholder dataset - replace video fields with your Vimeo/YouTube embed URLs
+    const DATA = {
       continueWatching: [],
-      episodes: [
-        { title: 'Sample Episode', description: 'Replace this description.', cast: ['Name 1','Name 2'], video: '' }
+      featured:[
+        {id:'f1',title:'NVNC — Teaser',thumb:'',video:'https://www.youtube.com/embed/dQw4w9WgXcQ',meta:'Teaser'}
       ],
-      adminMode: false
+      episodes:[
+        {id:'e1',title:'No Victim No Crime — Ep1',thumb:'',description:'Robbery prep. Replace with link.',cast:['Actor A','Actor B'],video:''},
+        {id:'e2',title:'Tiny Desk Session — Artist 1',thumb:'',description:'Live music session. Replace with link.',cast:['Artist 1'],video:''},
+        {id:'e3',title:'Fight Doc — Episode 1',thumb:'',description:'Intro to fighters. Replace link.',cast:['Fighter A','Fighter B'],video:''}
+      ]
     };
 
-    function render() {
-      const app = document.getElementById("app");
+    // --- HELPERS
+    function el(q){return document.querySelector(q)}
+    function renderRails(){
+      const cont = el('#continueRail'); cont.innerHTML = '';
+      DATA.continueWatching.forEach(it=>{const d=document.createElement('div');d.className='card';d.innerHTML=`<div class="title">${it.title}</div><div class="meta">${it.meta||''}</div>`;d.onclick=()=>openEpisodeById(it.id);cont.appendChild(d)});
 
-      if (state.adminMode === true) return renderAdmin();
-
-      app.innerHTML = `
-        <h2 class='section-title'>Continue Watching</h2>
-        <div class='carousel'>
-          ${state.continueWatching.map(e => `<div class='carousel-item'>${e.title}</div>`).join('')}
-        </div>
-
-        <h2 class='section-title'>Episodes</h2>
-        <div class='carousel'>
-          ${state.episodes.map((e,i) => `
-            <div class='carousel-item' onclick='openEpisode(${i})'>${e.title}</div>`).join('')}
-        </div>
-
-        <button onclick='enterAdmin()'>Admin Login</button>
-      `;
+      const feat = el('#featuredRail'); feat.innerHTML='';
+      DATA.featured.forEach(it=>{const d=document.createElement('div');d.className='card';d.innerHTML=`<div class="title">${it.title}</div><div class="meta">${it.meta||''}</div>`;d.onclick=()=>openPlayer(it.video,it.title);feat.appendChild(d)});
     }
 
-    function openEpisode(i) {
-      const e = state.episodes[i];
-      const app = document.getElementById("app");
+    function renderGrid(){
+      const grid=el('#episodeGrid');grid.innerHTML='';
+      DATA.episodes.forEach(it=>{
+        const c=document.createElement('div');c.className='card';c.innerHTML=`<div style="flex:1"></div><div class="title">${it.title}</div><div class="meta">${it.cast.join(', ')}</div>`;
+        c.onclick=()=>openEpisodeById(it.id);
+        grid.appendChild(c);
+      })
+    }
 
-      state.continueWatching.push(e);
+    function openEpisodeById(id){
+      const ep = DATA.episodes.find(e=>e.id===id) || DATA.episodes[0];
+      openPlayer(ep.video||'', ep.title, ep);
+      // add to continue
+      if(!DATA.continueWatching.find(x=>x.id===ep.id)) DATA.continueWatching.unshift({id:ep.id,title:ep.title,meta:ep.description});
+      if(DATA.continueWatching.length>6) DATA.continueWatching.pop();
+      renderRails();
+    }
 
-      app.innerHTML = `
-        <div class='episode-page'>
-          <h2>${e.title}</h2>
-          <p>${e.description}</p>
-          <strong>Cast:</strong>
-          <ul>${e.cast.map(c => `<li>${c}</li>`).join('')}</ul>
+    function openPlayer(url,title,ep){
+      const target = el('#billboard');
+      if(!url){ target.innerHTML=`<div style="padding:18px;color:var(--muted)">No video link set. Add one in Admin (YouTube / Vimeo embed URL).</div>`;return; }
+      target.innerHTML = `<iframe src="${url}" style="width:100%;height:100%;border:0" allowfullscreen></iframe>`;
+    }
 
-          <div style='margin-top:20px;'>
-            <iframe width="100%" height="320" src="${e.video}" frameborder="0" allowfullscreen></iframe>
+    function playSample(i){
+      const it = DATA.episodes[i] || DATA.featured[0];
+      openPlayer(it.video, it.title);
+    }
+
+    // --- Admin workflow (client-side only)
+    function openAdmin(){
+      const pass = prompt('Enter admin password');
+      if(pass!==ADMIN_PASSWORD){ alert('Incorrect password'); return; }
+      el('#adminModal').classList.remove('hidden');
+      renderAdmin();
+    }
+    function closeAdmin(){ el('#adminModal').classList.add('hidden'); }
+
+    function uid(prefix='id'){return prefix+Math.random().toString(36).slice(2,9)}
+
+    function renderAdmin(){
+      const c = el('#adminContent');
+      c.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:12px">
+          <div>
+            <label>New Episode Title</label>
+            <input id="adm_title" placeholder="Title">
+            <label>Description</label>
+            <textarea id="adm_desc" rows="3" placeholder="Short description"></textarea>
+            <label>Cast (comma separated)</label>
+            <input id="adm_cast" placeholder="Actor A, Actor B">
+            <label>Video (YouTube or Vimeo embed URL)</label>
+            <input id="adm_video" placeholder="https://www.youtube.com/embed/xxxx or https://player.vimeo.com/video/xxxx">
+            <div style="display:flex;gap:8px;margin-top:10px">
+              <button class="cta" onclick="adminAddEpisode()">Add Episode</button>
+              <button class="ghost" onclick="adminAddFeatured()">Add Featured</button>
+            </div>
+
+            <hr style="margin:12px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)">
+            <h4>Existing Episodes</h4>
+            <div id="adm_list"></div>
           </div>
-
-          <button onclick='render()'>Back</button>
+          <aside style="padding:6px">
+            <h4>Deploy & Links</h4>
+            <p class="lead" style="color:var(--muted)">This admin is client-side only. To persist changes across visitors you will need a small backend or use GitHub commits / Netlify forms / Firebase.</p>
+            <p style="font-size:13px;color:var(--muted)">Admin password is client-side — for production use server auth.</p>
+          </aside>
         </div>
       `;
+      refreshAdminList();
     }
 
-    function enterAdmin() {
-      const pass = prompt("Enter admin password");
-      if (pass === ADMIN_PASSWORD) {
-        state.adminMode = true;
-        renderAdmin();
-      } else alert("Incorrect password");
+    function adminAddEpisode(){
+      const t = el('#adm_title').value.trim();
+      if(!t){alert('Give it a title');return}
+      const obj = {id:uid('e'),title:t,description:el('#adm_desc').value,cast:el('#adm_cast').value.split(',').map(x=>x.trim()).filter(Boolean),video:el('#adm_video').value};
+      DATA.episodes.unshift(obj);
+      refreshAdminList(); renderGrid(); renderRails(); alert('Added. Remember to persist this to your repo if you want it saved.');
     }
+    function adminAddFeatured(){ const t=el('#adm_title').value.trim(); if(!t){alert('Give it a title');return} DATA.featured.unshift({id:uid('f'),title:t,video:el('#adm_video').value,meta:el('#adm_desc').value}); renderRails(); alert('Featured added.'); }
 
-    function renderAdmin() {
-      const app = document.getElementById("app");
-      app.innerHTML = `
-        <div class='admin'>
-          <h2>Admin Dashboard</h2>
-          <p>Add New Episode</p>
-          <input id='t' placeholder='Title'>
-          <input id='d' placeholder='Description'>
-          <input id='c' placeholder='Cast (comma separated)'>
-          <input id='v' placeholder='YouTube/Vimeo Embed URL'>
-          <button onclick='addEpisode()'>Upload Episode</button>
-          <button onclick='exitAdmin()'>Exit Admin</button>
-        </div>
-      `;
-    }
+    function refreshAdminList(){ const list=el('#adm_list'); list.innerHTML=''; DATA.episodes.forEach(ep=>{const d=document.createElement('div');d.style.padding='8px 0'; d.innerHTML=`<strong>${ep.title}</strong><div style="color:var(--muted);font-size:13px">${ep.cast.join(', ')}</div><div style="margin-top:6px"><button class='ghost' onclick="adminEdit('${ep.id}')">Edit</button> <button class='ghost' onclick="adminDelete('${ep.id}')">Delete</button></div>`; list.appendChild(d) }); }
 
-    function addEpisode() {
-      state.episodes.push({
-        title: document.getElementById('t').value,
-        description: document.getElementById('d').value,
-        cast: document.getElementById('c').value.split(',').map(x => x.trim()),
-        video: document.getElementById('v').value
-      });
-      alert("Episode Added!");
-    }
+    function adminEdit(id){ const ep = DATA.episodes.find(x=>x.id===id); if(!ep) return; el('#adm_title').value=ep.title; el('#adm_desc').value=ep.description; el('#adm_cast').value=ep.cast.join(', '); el('#adm_video').value=ep.video; }
+    function adminDelete(id){ if(!confirm('Delete this?')) return; DATA.episodes = DATA.episodes.filter(x=>x.id!==id); refreshAdminList(); renderGrid(); renderRails(); }
 
-    function exitAdmin() {
-      state.adminMode = false;
-      render();
-    }
+    // init render
+    renderRails(); renderGrid();
 
-    render();
+    // --- Deployment & GitHub Pages instructions (shown in console for convenience)
+    console.log('
+--- DEPLOYMENT HELP ---
+1) Create a new GitHub repo named e.g. venturegate-site.
+2) Add this index.html as the root file.
+3) In repo settings enable GitHub Pages and select main branch / root.
+4) Optionally add CNAME file with your domain.
+5) To persist admin changes, either implement a small backend or commit changes to the repo via GitHub API or use Firebase/Netlify forms.
+');
+
+  
+    console.log('
+--- ADSENSE GUIDE ---
+See the page footer for a full checklist on being AdSense-ready.');
+
+    // Ad‑Free flow placeholder
+    el('#upgradeBtn').addEventListener('click',()=>{ alert('Ad‑free checkout placeholder — integrate Stripe checkout or a payment link here.'); })
+
+    // Login placeholder
+    el('#loginBtn').addEventListener('click',()=>{ alert('Login placeholder — implement OAuth or Firebase auth for accounts.'); })
+
   </script>
+
+  -->
 </body>
 </html>
-
-
