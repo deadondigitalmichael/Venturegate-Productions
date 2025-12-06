@@ -8,7 +8,7 @@
   <style>
     body {
       margin: 0;
-      background: #0a0a0f;
+      background: #0a0a0f url('https://i.imgur.com/1o7wFQy.png') no-repeat bottom center / contain;
       color: white;
       font-family: Arial, sans-serif;
     }
@@ -18,12 +18,12 @@
       font-weight: bold;
       background: #111118;
       border-bottom: 2px solid #1f1f2e;
-      text-shadow: 0 0 8px #6ff;
+      
     }
     .section-title {
       font-size: 22px;
       margin: 20px;
-      text-shadow: 0 0 6px #00f0ff;
+      
     }
     .carousel {
       display: flex;
@@ -60,7 +60,7 @@
   </style>
 </head>
 <body>
-  <header>CINESTREAM+</header>
+  <header>VentureGate Productions — Belfast</header>
 
   <div id="app"></div>
 
@@ -70,7 +70,9 @@
     const state = {
       loggedIn: false,
       continueWatching: [],
-      episodes: [],
+      episodes: [
+        { title: 'Sample Episode', description: 'Replace this description.', cast: ['Name 1','Name 2'], video: '' }
+      ],
       adminMode: false
     };
 
@@ -161,5 +163,4 @@
 </body>
 </html>
 
-<!-- AD / Analytics: add your scripts here once ready (AdSense only after approval) -->
 
